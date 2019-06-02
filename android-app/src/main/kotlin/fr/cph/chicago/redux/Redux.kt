@@ -28,7 +28,7 @@ val store = Store(
     )
 )
 
-fun reducer(action: Action, oldState: State?): State {
+private fun reducer(action: Action, oldState: State?): State {
     // if no state has been provided, create the default state
     var state = oldState ?: State()
 

@@ -1,4 +1,5 @@
 import com.android.build.gradle.AppExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -57,6 +58,7 @@ android {
         main { java.srcDirs = ['src/main/kotlin'] }
         googleplay { java.srcDirs = ['src/googleplay/kotlin'] }
         foss { java.srcDirs = ['src/foss/kotlin'] }
+        androidTest { java.srcDirs = ['src/androidTest/kotlin'] }
     }
 
     signingConfigs {
@@ -121,7 +123,10 @@ android {
     }
 
     testOptions {
-        unitTests.returnDefaultValues = true
+        unitTests {
+            returnDefaultValues = true
+            includeAndroidResources = true
+        }
     }
 
     packagingOptions {
@@ -178,9 +183,32 @@ dependencies {
 
     kapt(Lib.butterknife_compiler)
 
-    testImplementation(Lib.junit) { exclude group: "org.hamcrest", module: "hamcrest-core" }
-    testImplementation(Lib.mockito) { exclude group: "org.hamcrest", module: "hamcrest-core" }
-    testImplementation(Lib.hamcrest)
+    //testImplementation(Lib.junit) { exclude group: "org.hamcrest", module: "hamcrest-core" }
+    //testImplementation(Lib.mockito) { exclude group: "org.hamcrest", module: "hamcrest-core" }
+    //testImplementation(Lib.hamcrest)
+
+    //androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    //androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    androidTestImplementation 'androidx.test:core:1.2.0'
+    androidTestImplementation 'androidx.test:core-ktx:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    testImplementation 'androidx.test:core:1.2.0'
+    testImplementation 'androidx.test.ext:junit:1.1.1'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.robolectric:robolectric:4.3-beta-1'
+    testImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation 'androidx.test.espresso:espresso-intents:3.2.0'
+    testImplementation 'androidx.test.ext:truth:1.2.0'
+}
+
+tasks.withType(KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 task currentVersion {

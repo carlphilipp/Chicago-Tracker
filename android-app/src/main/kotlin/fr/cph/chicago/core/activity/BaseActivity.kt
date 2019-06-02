@@ -28,9 +28,9 @@ import butterknife.BindView
 import fr.cph.chicago.R
 import fr.cph.chicago.R.string
 import fr.cph.chicago.core.activity.butterknife.ButterKnifeActivity
-import fr.cph.chicago.redux.State
 import fr.cph.chicago.redux.BaseAction
 import fr.cph.chicago.redux.DefaultSettingsAction
+import fr.cph.chicago.redux.State
 import fr.cph.chicago.redux.Status
 import fr.cph.chicago.redux.store
 import fr.cph.chicago.repository.RealmConfig
@@ -54,6 +54,7 @@ class BaseActivity : ButterKnifeActivity(R.layout.loading), StoreSubscriber<Stat
     lateinit var retryButton: Button
 
     private val realmConfig = RealmConfig
+    var inProgress: Boolean = true
 
     override fun create(savedInstanceState: Bundle?) {
         store.subscribe(this)
@@ -95,6 +96,7 @@ class BaseActivity : ButterKnifeActivity(R.layout.loading), StoreSubscriber<Stat
             Status.FULL_FAILURE -> {
                 if (failureLayout.visibility != View.VISIBLE) failureLayout.visibility = View.VISIBLE
                 if (loadingLayout.visibility != View.GONE) loadingLayout.visibility = View.GONE
+                inProgress = false
             }
             else -> Timber.d("Unknown status on new state")
         }
@@ -105,5 +107,6 @@ class BaseActivity : ButterKnifeActivity(R.layout.loading), StoreSubscriber<Stat
         finish()
         startActivity(intent)
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+        inProgress = false
     }
 }
